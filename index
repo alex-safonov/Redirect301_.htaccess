@@ -1,0 +1,179 @@
+Правила переадресаций
+1. 301 редирект с одной страницы на другую
+Самый простой вариант
+
+Redirect 301 /test-1/ http://site.ru/test-2/
+Более подробный
+
+RewriteCond %{REQUEST_URI} ^/test/$
+RewriteRule ^.*$ http://site.ru/new-test/? [R=301,L]
+2. 301 редирект с www на без www (главное зеркало – домен без www)
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ http://%1/$1 [L,R=301] 
+3. 301 редирект с без www на www (главное зеркало – домен с www)
+RewriteCond %{HTTP_HOST} ^([^www].*)$
+RewriteRule ^(.*)$ http://www.%1/$1 [L,R=301]
+4. 301 редирект со страниц со слешем на без слеша (весь сайт)
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} ![^\/]$
+RewriteRule ^(.*)\/$ /$1 [R=301,L] 
+5. 301 редирект со страниц без слеша на слеш (часто в CMS системах устанавливается автоматически)
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} !\/$
+RewriteRule ^(.*[^\/])$ /$1/ [R=301,L] 
+6. Один (а не два последовательных!) 301 редирект на без www и с слешем на конце адреса страницы
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} !\/$
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ http://%1/$1/ [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} ![^\/]$
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} !\/$
+RewriteCond %{HTTP_HOST} ^([^www].*)$
+RewriteRule ^(.*)$ http://%1/$1/ [L,R=301]
+7. Один (а не два последовательных!) 301 редирект на c www и со слешем на конце адреса страницы
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} !\/$
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ http://www.%1/$1/ [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} !\/$
+RewriteCond %{HTTP_HOST} ^([^www].*)$
+RewriteRule ^(.*)$ http://www.%1/$1/ [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} ![^\/]$
+RewriteCond %{HTTP_HOST} ^([^www].*)$
+RewriteRule ^(.*)$ http://www.%1/$1 [L,R=301]
+8. Один (а не два последовательных!) 301 редирект на c www и без слеша на конце адреса страницы
+RewriteCond %{REQUEST_URI} ^\/$
+RewriteCond %{HTTP_HOST} ^([^www].*)$
+RewriteRule ^(.*)$ http://www.%1/$1 [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} \/$
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)\/$ http://www.%1/$1 [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} !\/$
+RewriteCond %{HTTP_HOST} ^([^www].*)$
+RewriteRule ^(.*)$ http://www.%1/$1 [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} \/$
+RewriteCond %{HTTP_HOST} ^([^www].*)$
+RewriteRule ^(.*)\/$ http://www.%1/$1 [L,R=301]
+9. Один (а не два последовательных!) 301 редирект на без www и без слеша на конце адреса страницы
+RewriteCond %{REQUEST_URI} ^\/$
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} \/$ 
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)\/$ http://%1/$1 [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} !\/$
+RewriteCond %{HTTP_HOST} ^www\.(.*)$
+RewriteRule ^(.*)$ http://%1/$1 [L,R=301]
+
+RewriteCond %{REQUEST_URI} !\?
+RewriteCond %{REQUEST_URI} !\&
+RewriteCond %{REQUEST_URI} !\=
+RewriteCond %{REQUEST_URI} !\.
+RewriteCond %{REQUEST_URI} \/$
+RewriteCond %{HTTP_HOST} ^([^www].*)$
+RewriteRule ^(.*)\/$ http://%1/$1 [L,R=301]
+10. 301 редирект только адреса site.ru/index.php (без GET параметров) на основное зеркало site.ru
+RewriteCond %{REQUEST_URI} /index.php
+RewriteCond %{QUERY_STRING} ^\z
+RewriteRule ^(.*)$ http://site.ru/? [R=301,L]
+11. 301 редирект всех адресов с index.php и GET параметрами на страницы только с GET параметрами (вырезать в url index.php)
+Пример: типа site.ru/index.php?n=1 на site.ru/?n=1
+
+RewriteCond %{REQUEST_URI} /index.php
+RewriteRule ^(.*)$ http://site.ru/ [R=301,L]
+12. 301 редирект для index.php, index.html или index.htm (например в Joomla), массовая склейка
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,9}\ /index\.(php|html|htm)\ HTTP/ 
+RewriteRule ^(.*)index\.(php|html|htm)$ http://site.ru/$1 [R=301,L]
+13. 301 редирект url с GET параметрами (динамический URL) на статический
+1 вариант (простой адрес с GET параметром)
+
+RewriteCond %{QUERY_STRING} ^id=229
+RewriteRule ^.*$ /supermodel/? [R=301,L] 
+2 вариант (со страницы и GET параметром)
+
+RewriteCond %{REQUEST_URI} /test/
+RewriteCond %{QUERY_STRING} ^id=229
+RewriteRule ^.*$ /supermodel/? [R=301,L] 
+14. Все страницы одного домена на главную страницу другого домена
+RewriteCond %{REQUEST_URI} (.*)
+RewriteRule ^(.*)$ http://site.ru/ [L,R=301]
+15. Каждая страница одного домена на такой же адрес другого url
+RewriteCond %{REQUEST_URI} (.*)
+RewriteRule ^(.*)$ http://site.ru/$1 [L,R=301] 
+16. Редирект с протокола http на https.
+RewriteCond %{HTTPS} !=on
+RewriteRule ^(.*)$ https://%{HTTP_HOST}/$1 [R=301,L]
+Если возникает циклический редирект, то воспользуйтесь этим вариантом:
+
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+Для Битрикс-сайтов на хостинге reg.ru
+
+RewriteCond %{SERVER_PORT} !^443$
+RewriteRule .* https://%{SERVER_NAME}%{REQUEST_URI} [R,L]
+Для сертификатов https c Cloudflare:
+
+RewriteCond %{HTTP:CF-Visitor} '"scheme":"http"'
+# Without Cloudflare:
+# RewriteCond %{HTTPS} off 
+RewriteRule ^ https://www.example.com%{REQUEST_URI} [NE,R=301,L]
